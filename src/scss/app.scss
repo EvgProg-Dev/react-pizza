@@ -28,13 +28,19 @@ body {
   &__items {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    gap: 30px;
+    justify-content: center;
   }
 
   &__top {
     display: flex;
     align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
     justify-content: space-between;
+    @media (max-width: 1370px) {
+      flex-direction: column;
+    }
   }
 }
 
@@ -187,14 +193,14 @@ body {
       width: 4%;
 
       .button {
-        border-color: color.scale($color: vars.$gray-line, $lightness: 10%);
+        border-color: color.scale($color: #b0b0b0, $lightness: 10%);
       }
 
       svg {
         transform: rotate(45deg);
 
         path {
-          fill: color.scale($color: vars.$gray-line, $lightness: 15%);
+          fill: color.scale($color: #b0b0b0, $lightness: 15%);
         }
       }
 
@@ -203,12 +209,13 @@ body {
           width: 11.5px;
           height: 11.5px;
           position: relative;
+          fill: #b0b0b0;
         }
 
         &:hover,
         &:active {
-          border-color: color.scale($color: vars.$gray-line, $lightness: 80%);
-          background-color: color.scale($color: vars.$gray-line, $lightness: 80%);
+          border-color: color.scale($color: #777777, $lightness: 80%);
+          background-color: color.scale($color: #777777, $lightness: 80%);
         }
       }
     }
@@ -243,20 +250,21 @@ body {
         justify-content: center;
         width: 210px;
 
-        border-color: color.scale($color: vars.$gray-line, $lightness: 10%);
+
+        border-color: color.scale($color: #777777, $lightness: 10%);
 
         span {
-          color: color.scale($color: vars.$gray-line, $lightness: 20%);
+          color: color.scale($color: #777777, $lightness: 20%);
           font-weight: 500;
           font-weight: 600;
         }
 
         &:hover {
-          background-color: color.scale($color: vars.$gray-line, $lightness: 90%);
-          border-color: color.scale($color: vars.$gray-line, $lightness: 90%);
+          background-color: color.scale($color: #8d8d8d, $lightness: 90%);
+          border-color: color.scale($color: #8d8d8d, $lightness: 90%);
 
           span {
-            color: vars.$gray-line;
+            color: #7d7d7d;
           }
         }
 
@@ -273,7 +281,6 @@ body {
       .pay-btn {
         font-size: 16px;
         font-weight: 600;
-        width: 210px;
         padding: 16px;
       }
     }
