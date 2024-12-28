@@ -1,15 +1,22 @@
 import { useState } from "react";
 
-export const Sort = () => {
+export const Sort = ({ value, onChangeSort }) => {
     const [open, setOpen] = useState(false);
-    const [selected, setSelected] = useState(0);
-    const list = ["популярности", "цене", "алфавиту"];
+    const list = [
+        { name: "популярности ▼", sortProperty: "-rating", order: "desc" },
+        { name: "популярности ▲", sortProperty: "rating", order: "asc" },
 
+        { name: "цене ▼", sortProperty: "-price", order: "desc" },
+        { name: "цене ▲", sortProperty: "price", order: "asc" },
 
-    const changeSort = (i) => {
-        setSelected(i);
-        setOpen(false)
-    }
+        { name: "алфавиту ▼", sortProperty: "-title", order: "desc" },
+        { name: "алфавиту ▲", sortProperty: "title", order: "asc" },
+    ];
+
+    const onClickChangeSort = (sortProperty) => {
+        onChangeSort(sortProperty);
+        setOpen(false);
+    };
     return (
         <div className="sort">
             <div className="sort__label">
@@ -26,19 +33,23 @@ export const Sort = () => {
                     />
                 </svg>
                 <b>Сортировка по:</b>
-                <span onClick={() => setOpen(!open)}>{list[selected]}</span>
+                <span onClick={() => setOpen(!open)}>{value.name}</span>
             </div>
 
             {open && (
                 <div className="sort__popup">
                     <ul>
-                        {list.map((item, i) => (
+                        {list.map((obj, i) => (
                             <li
-                                onClick={() => changeSort(i)}
-                                className={selected === i ? "active" : ""}
+                                onClick={() => onClickChangeSort(obj)}
+                                className={
+                                    value.sortProperty === obj.sortProperty
+                                        ? "active"
+                                        : ""
+                                }
                                 key={i}
                             >
-                                {item}
+                                {obj.name}
                             </li>
                         ))}
                     </ul>
