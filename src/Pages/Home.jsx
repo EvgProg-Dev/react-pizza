@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { Categories } from "../components/Categories/Categories";
 import { Sort } from "../components/Sort/Sort";
 import { Skeleton } from "../components/Skeleton/Skeleton";
 import { PizzaBlock } from "../components/PizzaBlock/PizzaBlock";
 import { Pagination } from "../components/Pagination/Pagination";
+import { SearchContext } from "../App";
 
-export const Home = ({ searchValue }) => {
+export const Home = () => {
+    const { searchValue } = useContext(SearchContext);
+    
     const [items, setItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [categoryId, setCategoryId] = useState(0);
@@ -59,7 +62,6 @@ export const Home = ({ searchValue }) => {
                 </div>
                 <Pagination onChangePage={(page) => setCurrentPage(page)} />
             </div>
-
         </>
     );
 };
