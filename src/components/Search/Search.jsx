@@ -1,9 +1,33 @@
-import { useContext } from "react";
 import style from "./Search.module.scss";
-import { SearchContext } from "../../App";
+import { useDispatch } from "react-redux";
+import { changeSearch } from "../../redux/slices/searchSlice";
+import { useCallback, useRef, useState } from "react";
+import debounce from "lodash.debounce";
 
 export const Search = () => {
-    const { searchValue, setSearchValue } = useContext(SearchContext);
+    const [value, setValue] = useState("");
+    const dispatch = useDispatch();
+
+    const inputRef = useRef();
+
+    const updateSearchValue = useCallback(
+        debounce((value) => {
+            dispatch(changeSearch(value));
+        }, 1000),
+        [dispatch]
+    );
+    
+    const onChangeInput = (e) => {
+        setValue(e.target.value);
+        updateSearchValue(e.target.value);
+    };
+
+    const onClickClear = () => {
+        dispatch(changeSearch(""));
+        setValue("");
+        inputRef.current.focus();
+    };
+
     return (
         <div className={style.root}>
             <svg
@@ -18,16 +42,17 @@ export const Search = () => {
             </svg>
 
             <input
+                ref={inputRef}
                 className={style.input}
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
+                value={value}
+                onChange={onChangeInput}
                 type="text"
                 placeholder="Поиск..."
             />
 
-            {searchValue && (
+            {value && (
                 <svg
-                    onClick={() => setSearchValue("")}
+                    onClick={onClickClear}
                     className={style.clearIcon}
                     xmlns="http://www.w3.org/2000/svg"
                     id="Outline"
