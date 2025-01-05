@@ -1,16 +1,16 @@
-import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import QueryString from "qs";
+import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { changeCurrentPage, setFilters } from "../redux/slices/filterSlice";
+import { fetchPizzas } from "../redux/slices/pizzasSlice";
 
 import { Categories } from "../components/Categories/Categories";
 import { list, Sort } from "../components/Sort/Sort";
 import { Skeleton } from "../components/Skeleton/Skeleton";
 import { PizzaBlock } from "../components/PizzaBlock/PizzaBlock";
 import { Pagination } from "../components/Pagination/Pagination";
-import QueryString from "qs";
-import { useNavigate } from "react-router-dom";
 
 export const Home = () => {
     const navigate = useNavigate();
@@ -23,32 +23,22 @@ export const Home = () => {
         (state) => state.filter
     );
     const searchValue = useSelector((state) => state.search.searchValue);
-
-    const [items, setItems] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-
-
+    const { items, status } = useSelector((state) => state.pizza);
 
     const onChangePage = (page) => {
         dispatch(changeCurrentPage(page));
     };
 
-    const fetchPizzas = () => {
+    const getPizzas = async () => {
         const category =
             activeCategory > 0 ? `&category=${activeCategory}` : "";
         const sortBy = activeSort.sortProperty.replace("-", "");
         const order = activeSort.order;
         const search = searchValue ? `&search=${searchValue}` : "";
 
-        setIsLoading(true);
-        axios
-            .get(
-                `https://66a22dd1967c89168f1f1755.mockapi.io/items?page=${activeCurrentPage}&limit=4${category}&sortBy=${sortBy}&order=${order}${search}`
-            )
-            .then((res) => {
-                setItems(res.data);
-                setIsLoading(false);
-            });
+        dispatch(
+            fetchPizzas({ category, sortBy, order, search, activeCurrentPage })
+        );
     };
 
     useEffect(() => {
@@ -71,7 +61,7 @@ export const Home = () => {
 
     useEffect(() => {
         if (!isSearch.current) {
-            fetchPizzas();
+            getPizzas();
         }
         isSearch.current = false;
     }, [activeCategory, activeSort, searchValue, activeCurrentPage]);
@@ -96,17 +86,30 @@ export const Home = () => {
                     <Sort />
                 </div>
                 <h2 className="content__title">Все пиццы</h2>
-                <div className="content__items">
-                    {isLoading
-                        ? [...new Array(4)].map((_, i) => <Skeleton key={i} />)
-                        : items.map((item) => (
-                              <PizzaBlock key={item.id} {...item} />
-                          ))}
-                </div>
-                <Pagination
-                    activeCurrentPage={activeCurrentPage}
-                    onChangePage={onChangePage}
-                />
+                {status === "error" ? (
+                    <div className="cart cart--empty">
+                        <h2>Произошла ошибка 😕</h2>
+                        <p>
+                            Вероятней всего, сайт временно не работает.
+                            <br />
+                            Повторите попытку позже.
+                        </p>
+                    </div>
+                ) : (
+                    <div className="content__items">
+                        {status === "loading"
+                            ? [...new Array(4)].map((_, i) => (
+                                  <Skeleton key={i} />
+                              ))
+                            : items.map((item) => (
+                                  <PizzaBlock key={item.id} {...item} />
+                              ))}
+                        <Pagination
+                            activeCurrentPage={activeCurrentPage}
+                            onChangePage={onChangePage}
+                        />
+                    </div>
+                )}
             </div>
         </>
     );
