@@ -27,6 +27,8 @@ export const Home = () => {
     const [items, setItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
+
+
     const onChangePage = (page) => {
         dispatch(changeCurrentPage(page));
     };
