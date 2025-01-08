@@ -2,7 +2,7 @@
 @use './../variables' as vars;
 
 .button {
-  // display: flex;
+  display: flex;
   align-items: center;
   gap: 8px;
   background-color: vars.$orange;
@@ -48,6 +48,8 @@
   }
 
   &--black {
+    width: max-content;
+    display: block;
     background-color: vars.$black;
 
     &:hover,

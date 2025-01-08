@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../../redux/slices/cartSlice";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 const typeName = ["тонкое", "традиционное"];
 
@@ -27,10 +28,30 @@ export const PizzaBlock = ({ id, imageUrl, price, sizes, title, types }) => {
         dispatch(addItem(item));
     };
 
+    const { pathname } = useLocation();
+
     return (
         <div className="pizza-block">
-            <img className="pizza-block__image" src={imageUrl} alt={title} />
-            <h4 className="pizza-block__title">{title}</h4>
+            {!pathname.startsWith("/pizza/") ? (
+                <Link to={`/pizza/${id}`}>
+                    <img
+                        className="pizza-block__image"
+                        src={imageUrl}
+                        alt={title}
+                    />
+                    <h4 className="pizza-block__title">{title}</h4>
+                </Link>
+            ) : (
+                <>
+                    <img
+                        className="pizza-block__image"
+                        src={imageUrl}
+                        alt={title}
+                    />
+                    <h4 className="pizza-block__title">{title}</h4>
+                </>
+            )}
+
             <div className="pizza-block__selector">
                 <ul>
                     {types.map((indexType) => (
@@ -74,7 +95,7 @@ export const PizzaBlock = ({ id, imageUrl, price, sizes, title, types }) => {
                         />
                     </svg>
                     <span>Добавить</span>
-                    {addedToCart > 0   && <i>{addedToCart}</i>}
+                    {addedToCart > 0 && <i>{addedToCart}</i>}
                 </button>
             </div>
         </div>

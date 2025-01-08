@@ -1,6 +1,6 @@
 import QueryString from "qs";
 import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { changeCurrentPage, setFilters } from "../redux/slices/filterSlice";
@@ -19,10 +19,8 @@ export const Home = () => {
     const isSearch = useRef(false);
     const isMounted = useRef(false);
 
-    const { activeCategory, activeSort, activeCurrentPage } = useSelector(
-        (state) => state.filter
-    );
-    const searchValue = useSelector((state) => state.search.searchValue);
+    const { activeCategory, activeSort, activeCurrentPage, searchValue } =
+        useSelector((state) => state.filter);
     const { items, status } = useSelector((state) => state.pizza);
 
     const onChangePage = (page) => {
@@ -96,19 +94,21 @@ export const Home = () => {
                         </p>
                     </div>
                 ) : (
-                    <div className="content__items">
-                        {status === "loading"
-                            ? [...new Array(4)].map((_, i) => (
-                                  <Skeleton key={i} />
-                              ))
-                            : items.map((item) => (
-                                  <PizzaBlock key={item.id} {...item} />
-                              ))}
+                    <>
+                        <div className="content__items">
+                            {status === "loading"
+                                ? [...new Array(4)].map((_, i) => (
+                                      <Skeleton key={i} />
+                                  ))
+                                : items.map((item) => (
+                                          <PizzaBlock key={item.id} {...item} />
+                                  ))}
+                        </div>
                         <Pagination
                             activeCurrentPage={activeCurrentPage}
                             onChangePage={onChangePage}
                         />
-                    </div>
+                    </>
                 )}
             </div>
         </>
