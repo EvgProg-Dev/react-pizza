@@ -1,11 +1,20 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { PizzaBlock } from "../components/PizzaBlock/PizzaBlock";
 
-export const PizzaInfo = () => {
+interface Pizza {
+    id: string;
+    title: string;
+    imageUrl: string;
+    price: number;
+    sizes: number[];
+    types: number[];
+}
+
+export const PizzaInfo: FC = () => {
     const { id } = useParams();
-    const [pizza, setPizza] = useState();
+    const [pizza, setPizza] = useState<Pizza>();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -16,7 +25,7 @@ export const PizzaInfo = () => {
                 );
                 setPizza(data);
             } catch (error) {
-                alert('Ошибка получения данных!', error);
+                alert('Ошибка получения данных!');
                 navigate('/')
             }
         };
@@ -35,5 +44,3 @@ export const PizzaInfo = () => {
     );
 };
 
-
-// 37 24
