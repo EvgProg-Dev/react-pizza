@@ -1,10 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
 import { Search } from "../Search/Search";
 import { useSelector } from "react-redux";
+import React, { FC } from "react";
+import { RootState } from "../../redux/store";
 
-export const Header = () => {
-    const { items, totalPrice } = useSelector((state) => state.cart);
-    const totalCount = items.reduce((acc, item) => {
+export const Header: FC = () => {
+    const { items, totalPrice } = useSelector((state: RootState) => state.cart);
+    const totalCount = items.reduce((acc: number, item: any) => {
         return acc + item.count;
     }, 0);
     const { pathname } = useLocation();
@@ -19,10 +21,7 @@ export const Header = () => {
                             src="./img/pizza-logo.svg"
                             alt="Pizza logo"
                         />
-                        {/* <div> */}
                         <h1>React Pizza</h1>
-                        {/* <p>самая вкусная пицца во вселенной</p> */}
-                        {/* </div> */}
                     </div>
                 </Link>
                 {pathname !== "/cart" && <Search />}

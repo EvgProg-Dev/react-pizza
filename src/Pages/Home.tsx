@@ -1,5 +1,5 @@
 import QueryString from "qs";
-import { useEffect, useRef } from "react";
+import React, { FC, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,8 +11,9 @@ import { list, Sort } from "../components/Sort/Sort";
 import { Skeleton } from "../components/Skeleton/Skeleton";
 import { PizzaBlock } from "../components/PizzaBlock/PizzaBlock";
 import { Pagination } from "../components/Pagination/Pagination";
+import { RootState } from "../redux/store";
 
-export const Home = () => {
+export const Home: FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -20,10 +21,10 @@ export const Home = () => {
     const isMounted = useRef(false);
 
     const { activeCategory, activeSort, activeCurrentPage, searchValue } =
-        useSelector((state) => state.filter);
-    const { items, status } = useSelector((state) => state.pizza);
+        useSelector((state: RootState) => state.filter);
+    const { items, status } = useSelector((state: RootState) => state.pizza);
 
-    const onChangePage = (page) => {
+    const onChangePage = (page: number) => {
         dispatch(changeCurrentPage(page));
     };
 
@@ -35,6 +36,7 @@ export const Home = () => {
         const search = searchValue ? `&search=${searchValue}` : "";
 
         dispatch(
+            // @ts-ignore
             fetchPizzas({ category, sortBy, order, search, activeCurrentPage })
         );
     };
@@ -100,8 +102,8 @@ export const Home = () => {
                                 ? [...new Array(4)].map((_, i) => (
                                       <Skeleton key={i} />
                                   ))
-                                : items.map((item) => (
-                                          <PizzaBlock key={item.id} {...item} />
+                                : items.map((item: any) => (
+                                      <PizzaBlock key={item.id} {...item} />
                                   ))}
                         </div>
                         <Pagination

@@ -3,14 +3,14 @@ import React, { FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { PizzaBlock } from "../components/PizzaBlock/PizzaBlock";
 
-interface Pizza {
+type Pizza = {
     id: string;
     title: string;
     imageUrl: string;
     price: number;
     sizes: number[];
     types: number[];
-}
+};
 
 export const PizzaInfo: FC = () => {
     const { id } = useParams();
@@ -25,8 +25,8 @@ export const PizzaInfo: FC = () => {
                 );
                 setPizza(data);
             } catch (error) {
-                alert('Ошибка получения данных!');
-                navigate('/')
+                alert("Ошибка получения данных!");
+                navigate("/");
             }
         };
 
@@ -43,4 +43,3 @@ export const PizzaInfo: FC = () => {
         </div>
     );
 };
-

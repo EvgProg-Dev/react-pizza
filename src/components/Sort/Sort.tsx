@@ -1,8 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { changeSort } from "../../redux/slices/filterSlice";
+import { RootState } from "../../redux/store";
 
-export const list = [
+
+
+type SortItem = {
+    name: string;
+    sortProperty: string;
+    order: string;
+}
+
+export const list: SortItem[] = [
     { name: "популярности ▼", sortProperty: "-rating", order: "desc" },
     { name: "популярности ▲", sortProperty: "rating", order: "asc" },
 
@@ -13,22 +22,22 @@ export const list = [
     { name: "алфавиту ▲", sortProperty: "title", order: "asc" },
 ];
 
-export const Sort = () => {
-    const [open, setOpen] = useState(false);
-    const sortRef = useRef();
+export const Sort: FC = () => {
+    const [open, setOpen] = useState<boolean>(false);
+    const sortRef = useRef<HTMLDivElement>(null);
 
     const dispatch = useDispatch();
-    const activeSort = useSelector((state) => state.filter.activeSort);
+    const activeSort = useSelector((state: RootState) => state.filter.activeSort);
 
-    const onClickChangeSort = (sortProperty) => {
+    const onClickChangeSort = (sortProperty: SortItem) => {
         dispatch(changeSort(sortProperty));
         setOpen(false);
     };
 
     useEffect(() => {
-        const handleClick = (e) => {
+        const handleClick = (e: MouseEvent) => {
             const path = e.composedPath();
-            if (!path.includes(sortRef.current)) {
+            if (sortRef.current && !path.includes(sortRef.current)) {
                 setOpen(false);
             }
         };

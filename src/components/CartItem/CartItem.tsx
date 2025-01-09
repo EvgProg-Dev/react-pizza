@@ -1,20 +1,38 @@
-import { useDispatch } from "react-redux";
-import { addItem, clearItems, minusItem, removeItem } from "../../redux/slices/cartSlice";
-import { CartEmpty } from "../CartEmpty/CartEmpty";
+import React, { FC } from "react";
 
-export const CartItem = ({ id, imageUrl, title, count, price, size, type
+import { useDispatch } from "react-redux";
+import { addItem, minusItem, removeItem } from "../../redux/slices/cartSlice";
+
+type CartItemProps = {
+    id: string;
+    imageUrl: string;
+    title: string;
+    count: number;
+    price: number;
+    size: number;
+    type: string;
+};
+
+export const CartItem: FC<CartItemProps> = ({
+    id,
+    imageUrl,
+    title,
+    count,
+    price,
+    size,
+    type,
 }) => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const onClickPlus = () => {
-        dispatch(addItem({id}))
-    }
+        dispatch(addItem({ id }));
+    };
     const onClickMinus = () => {
-        dispatch(minusItem(id))
-    }
+        dispatch(minusItem(id));
+    };
     const onClickRemove = () => {
-        dispatch(removeItem(id))
-    }
+        dispatch(removeItem(id));
+    };
 
     return (
         <div key={id} className="cart__item">
@@ -27,10 +45,15 @@ export const CartItem = ({ id, imageUrl, title, count, price, size, type
             </div>
             <div className="cart__item-info">
                 <h3>{title}</h3>
-                <p>{type} тесто, {size} см.</p>
+                <p>
+                    {type} тесто, {size} см.
+                </p>
             </div>
             <div className="cart__item-count">
-                <div onClick={onClickMinus} className="button button--outline button--circle cart__item-count-minus">
+                <div
+                    onClick={onClickMinus}
+                    className="button button--outline button--circle cart__item-count-minus"
+                >
                     <svg
                         width={10}
                         height={10}
@@ -49,7 +72,10 @@ export const CartItem = ({ id, imageUrl, title, count, price, size, type
                     </svg>
                 </div>
                 <b>{count}</b>
-                <div onClick={onClickPlus} className="button button--outline button--circle cart__item-count-plus">
+                <div
+                    onClick={onClickPlus}
+                    className="button button--outline button--circle cart__item-count-plus"
+                >
                     <svg
                         width={10}
                         height={10}

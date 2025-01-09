@@ -1,7 +1,9 @@
+import React, { FC } from "react";
+
 import { Link } from "react-router-dom";
 import style from "./NotFoundBlock.module.scss";
 
-export const NotFoundBlock = () => {
+export const NotFoundBlock: FC = () => {
     return (
         <div className={style.root}>
             <h1>
