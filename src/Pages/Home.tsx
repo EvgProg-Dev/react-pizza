@@ -1,27 +1,29 @@
 import QueryString from "qs";
 import React, { FC, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import { changeCurrentPage, setFilters } from "../redux/slices/filterSlice";
 import { fetchPizzas } from "../redux/slices/pizzasSlice";
 
 import { Categories } from "../components/Categories/Categories";
-import { list, Sort } from "../components/Sort/Sort";
+import { Sort, list } from "../components/Sort/Sort";
 import { Skeleton } from "../components/Skeleton/Skeleton";
 import { PizzaBlock } from "../components/PizzaBlock/PizzaBlock";
 import { Pagination } from "../components/Pagination/Pagination";
-import { RootState } from "../redux/store";
+import { RootState, useAppDispatch } from "../redux/store";
 
 export const Home: FC = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const isSearch = useRef(false);
     const isMounted = useRef(false);
 
-    const { activeCategory, activeSort, activeCurrentPage, searchValue } =
-        useSelector((state: RootState) => state.filter);
+    const { category, page, sort, searchValue } = useSelector(
+        (state: RootState) => state.filter
+    );
+
     const { items, status } = useSelector((state: RootState) => state.pizza);
 
     const onChangePage = (page: number) => {
@@ -29,16 +31,12 @@ export const Home: FC = () => {
     };
 
     const getPizzas = async () => {
-        const category =
-            activeCategory > 0 ? `&category=${activeCategory}` : "";
-        const sortBy = activeSort.sortProperty.replace("-", "");
-        const order = activeSort.order;
+        const categoryActive = category > 0 ? `&category=${category}` : "";
+        const sortBy = sort.sortProperty.replace("-", "");
+        const order = sort.order;
         const search = searchValue ? `&search=${searchValue}` : "";
 
-        dispatch(
-            // @ts-ignore
-            fetchPizzas({ category, sortBy, order, search, activeCurrentPage })
-        );
+        dispatch(fetchPizzas({ categoryActive, sortBy, order, search, page }));
     };
 
     useEffect(() => {
@@ -47,14 +45,19 @@ export const Home: FC = () => {
                 window.location.search.substring(1)
             );
 
-            const sort = list.find((obj) => obj.sortProperty === params.sort);
+            const sort =
+                list.find((obj) => obj.sortProperty === params.sort) || list[0];
 
             dispatch(
                 setFilters({
-                    ...params,
+                    category: params.category ? Number(params.category) : 0,
+                    page: params.page ? Number(params.page) : 1,
                     sort,
+                    searchValue:
+                        typeof params.search === "string" ? params.search : "",
                 })
             );
+
             isSearch.current = true;
         }
     }, []);
@@ -64,19 +67,19 @@ export const Home: FC = () => {
             getPizzas();
         }
         isSearch.current = false;
-    }, [activeCategory, activeSort, searchValue, activeCurrentPage]);
+    }, [category, sort, searchValue, page]);
 
     useEffect(() => {
         if (isMounted.current) {
             const queryString = QueryString.stringify({
-                sort: activeSort.sortProperty,
-                category: activeCategory,
-                page: activeCurrentPage,
+                sort: sort.sortProperty,
+                category: category,
+                page: page,
             });
             navigate(`?${queryString}`);
         }
         isMounted.current = true;
-    }, [activeCategory, activeSort, activeCurrentPage]);
+    }, [category, sort, page]);
 
     return (
         <>
@@ -107,7 +110,7 @@ export const Home: FC = () => {
                                   ))}
                         </div>
                         <Pagination
-                            activeCurrentPage={activeCurrentPage}
+                            activeCurrentPage={page}
                             onChangePage={onChangePage}
                         />
                     </>

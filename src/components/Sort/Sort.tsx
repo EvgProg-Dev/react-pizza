@@ -1,15 +1,20 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, memo, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { changeSort } from "../../redux/slices/filterSlice";
 import { RootState } from "../../redux/store";
-
-
+import { useWhyDidYouUpdate } from "ahooks";
 
 type SortItem = {
     name: string;
-    sortProperty: string;
-    order: string;
-}
+    sortProperty:
+        | "-rating"
+        | "rating"
+        | "-price"
+        | "price"
+        | "-title"
+        | "title";
+    order: "asc" | "desc";
+};
 
 export const list: SortItem[] = [
     { name: "популярности ▼", sortProperty: "-rating", order: "desc" },
@@ -22,15 +27,15 @@ export const list: SortItem[] = [
     { name: "алфавиту ▲", sortProperty: "title", order: "asc" },
 ];
 
-export const Sort: FC = () => {
+export const Sort: FC = memo(() => {
     const [open, setOpen] = useState<boolean>(false);
     const sortRef = useRef<HTMLDivElement>(null);
 
     const dispatch = useDispatch();
-    const activeSort = useSelector((state: RootState) => state.filter.activeSort);
+    const activeSort = useSelector((state: RootState) => state.filter.sort);
 
-    const onClickChangeSort = (sortProperty: SortItem) => {
-        dispatch(changeSort(sortProperty));
+    const onClickChangeSort = (sortItem: SortItem) => {
+        dispatch(changeSort(sortItem));
         setOpen(false);
     };
 
@@ -87,4 +92,4 @@ export const Sort: FC = () => {
             )}
         </div>
     );
-};
+});

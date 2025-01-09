@@ -41,6 +41,7 @@ export const PizzaBlock: FC<PizzaBlockProps> = ({
             imageUrl,
             type: typeName[activeType],
             size: sizes[activeSize],
+            count: 1,
         };
         dispatch(addItem(item));
     };
